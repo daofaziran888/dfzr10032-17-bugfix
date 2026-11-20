@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, Query, Request
 
 from app.schemas import ActionResult, EntryPayload, PageResult
 from app.services.ingestion import IngestionService
+from app.services.rpa_share import service as rpa_share_service
 
 router = APIRouter(prefix="/api/ingestion", tags=["数据接入通道"])
 
@@ -21,6 +22,21 @@ def export_entries() -> dict[str, Any]:
     """导出数据接入通道清单：返回当前过滤条件下的全量数据。"""
     items, total = service.list_entries(page=1, size=10000)
     return {"module": "ingestion", "total": total, "items": items}
+
+
+@router.get("/share-completeness")
+def share_completeness(dataset_no: str = Query(..., description="RPA共享字段数据集批次编号")) -> dict[str, Any]:
+    """数据接入通道依据RPA共享字段数据集计算完整率明细。
+
+    口径完全取自共享批次冻结的共享权限：授权字段才计入分母，
+    原值为空与未授权字段分开列示，通道自身不重复实现脱敏/授权规则。
+    """
+    result = rpa_share_service.completeness(dataset_no)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail=result["message"])
+    result["来源模块"] = "rpa_share"
+    result["计算口径"] = "按共享批次冻结的授权字段计入，未授权字段不参与完整率"
+    return result
 
 
 @router.get("", response_model=PageResult[dict])

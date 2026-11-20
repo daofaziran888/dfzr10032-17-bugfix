@@ -101,6 +101,18 @@ class IngestionEntry(BaseModel):
     field_6: str | None = None  # 缓冲队列
     field_7: str | None = None  # 通道状态
 
+class RpaShareEntry(BaseModel):
+    """RPA共享字段数据集批次明细结构（不含受控字段原值）。"""
+
+    field_0: str | None = None  # 数据集编号
+    field_1: str | None = None  # 数据集名称
+    field_2: str | None = None  # 执行批次
+    field_3: str | None = None  # 范围编号
+    field_4: str | None = None  # 可读字段
+    field_5: str | None = None  # 样本票数
+    field_6: str | None = None  # 生成时间
+    field_7: str | None = None  # 签收时间
+
 class ParserEntry(BaseModel):
     """解析配置明细结构。"""
 

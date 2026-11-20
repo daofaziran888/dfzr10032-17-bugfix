@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.rpa_share_data import build_tables
 from app.seed import SEED_ROWS
 
 
@@ -14,6 +15,12 @@ class Store:
         self._tables: dict[str, list[dict[str, Any]]] = {
             name: [dict(row) for row in rows] for name, rows in SEED_ROWS.items()
         }
+        # RPA共享字段数据集：执行批次原值、范围版本、共享批次与交付记录四张表
+        self._tables.update(build_tables())
+
+    def replace_rows(self, module: str, rows: list[dict[str, Any]]) -> None:
+        """整表替换（目前仅用于共享数据集演示数据重置）。"""
+        self._tables[module] = rows
 
     def module_names(self) -> list[str]:
         return sorted(self._tables)
@@ -28,8 +35,12 @@ class Store:
         return None
 
     def overview(self) -> dict[str, object]:
+        # 共享数据集的范围版本/执行样本/交付记录是子表，不计入运营概览的模块列表
+        hidden_modules = {"rpa_share_scope", "rpa_share_exec_sample", "rpa_share_record"}
         modules: list[dict[str, object]] = []
         for name in self.module_names():
+            if name in hidden_modules:
+                continue
             rows = self.rows(name)
             modules.append({
                 "name": name,

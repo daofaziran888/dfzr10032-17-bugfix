@@ -6,6 +6,7 @@ const Crawler = () => import('@/views/crawler/index.vue')
 const Apiclient = () => import('@/views/apiclient/index.vue')
 const Incremental = () => import('@/views/incremental/index.vue')
 const RobotTask = () => import('@/views/robot_task/index.vue')
+const RpaShare = () => import('@/views/rpa_share/index.vue')
 const Ingestion = () => import('@/views/ingestion/index.vue')
 const Parser = () => import('@/views/parser/index.vue')
 const Validator = () => import('@/views/validator/index.vue')
@@ -28,6 +29,7 @@ const router = createRouter({
     { path: '/apiclient', name: 'apiclient', component: Apiclient },
     { path: '/incremental', name: 'incremental', component: Incremental },
     { path: '/robot_task', name: 'robot_task', component: RobotTask },
+    { path: '/rpa_share', name: 'rpa_share', component: RpaShare },
     { path: '/ingestion', name: 'ingestion', component: Ingestion },
     { path: '/parser', name: 'parser', component: Parser },
     { path: '/validator', name: 'validator', component: Validator },

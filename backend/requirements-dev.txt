@@ -1,0 +1,6 @@
+# 开发与测试依赖：在 requirements.txt 基础上补充
+-r requirements.txt
+
+# FastAPI TestClient 依赖 httpx；pytest 运行 tests/ 下的业务不变量用例
+httpx>=0.27
+pytest>=8.0
